@@ -1,5 +1,5 @@
 # @goto-bus-stop/common-shake
-[![NPM version](https://badge.fury.io/js/@goto-bus-stop/common-shake.svg)](http://badge.fury.io/js/@goto-bus-stop/common-shake)
+[![NPM version](https://badge.fury.io/js/%40goto-bus-stop%2Fcommon-shake.svg)](http://badge.fury.io/js/%40goto-bus-stop%2Fcommon-shake)
 [![Build Status](https://secure.travis-ci.org/goto-bus-stop/common-shake.svg)](http://travis-ci.org/goto-bus-stop/common-shake)
 
 > This is a fork of [indutny/common-shake](https://github.com/indutny/common-shake),
