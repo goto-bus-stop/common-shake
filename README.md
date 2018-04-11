@@ -1,14 +1,20 @@
-# CommonJS Tree Shaker
-[![NPM version](https://badge.fury.io/js/common-shake.svg)](http://badge.fury.io/js/common-shake)
-[![Build Status](https://secure.travis-ci.org/indutny/common-shake.svg)](http://travis-ci.org/indutny/common-shake)
+# @goto-bus-stop/common-shake
+[![NPM version](https://badge.fury.io/js/@goto-bus-stop/common-shake.svg)](http://badge.fury.io/js/@goto-bus-stop/common-shake)
+[![Build Status](https://secure.travis-ci.org/goto-bus-stop/common-shake.svg)](http://travis-ci.org/goto-bus-stop/common-shake)
+
+> This is a fork of [indutny/common-shake](https://github.com/indutny/common-shake),
+> pending [#3](https://github.com/indutny/common-shake/pull/3).
+
+---
 
 See [webpack-common-shake][0] for [webpack][1] plugin.
+See [common-shakeify][3] for a [browserify][4] plugin.
 
 ## Usage
 
 ```js
 const acorn = require('acorn');
-const Analyzer = require('common-shake').Analyzer;
+const Analyzer = require('@goto-bus-stop/common-shake').Analyzer;
 
 const a = new Analyzer();
 
@@ -49,7 +55,7 @@ For debugging and inspection purposes a graph in [dot][2] format may be
 generated from the modules hierarchy using following API:
 
 ```js
-const Graph = require('common-shake').Graph;
+const Graph = require('@goto-bus-stop/common-shake').Graph;
 const graph = new Graph('/path/to/working/dir');
 
 console.log(graph.generate(analyzer.getModules()));
@@ -83,3 +89,5 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 [0]: https://github.com/indutny/webpack-common-shake
 [1]: https://webpack.github.io/
 [2]: http://www.graphviz.org/content/dot-language
+[3]: https://github.com/browserify/common-shakeify
+[4]: https://browserify.org

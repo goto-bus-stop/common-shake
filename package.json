@@ -1,11 +1,11 @@
 {
-  "name": "common-shake",
+  "name": "@goto-bus-stop/common-shake",
   "version": "2.1.0",
-  "description": "CommonJS Tree Shake",
+  "description": "CommonJS Tree Shake (fork)",
   "main": "lib/shake.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/indutny/common-shake.git"
+    "url": "git+ssh://git@github.com/goto-bus-stop/common-shake.git"
   },
   "scripts": {
     "lint": "eslint lib/*.js lib/**/*.js test/*.js",
