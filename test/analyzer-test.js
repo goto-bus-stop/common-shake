@@ -9,6 +9,7 @@ const shake = require('../');
 const Analyzer = shake.Analyzer;
 
 const EMPTY = {
+  removeImport: false,
   bailouts: false,
   uses: [],
   declarations: []
@@ -44,6 +45,7 @@ describe('Analyzer', () => {
     `), 'root');
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [],
       declarations: [ 'a', 'b', 'c' ]
@@ -78,6 +80,7 @@ describe('Analyzer', () => {
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), EMPTY);
     assert.deepEqual(analyzer.getModule('a').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'a', 'b', 'c' ],
       declarations: [ 'a', 'b', 'c', 'd' ]
@@ -101,6 +104,7 @@ describe('Analyzer', () => {
     analyzer.getModule('root').use('d', analyzer.getModule('root'), false);
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'd', 'b', 'c' ],
       declarations: [ 'a', 'b', 'c', 'd' ]
@@ -118,6 +122,7 @@ describe('Analyzer', () => {
     `), 'root');
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [],
       declarations: [ 'b' ]
@@ -139,6 +144,7 @@ describe('Analyzer', () => {
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), EMPTY);
     assert.deepEqual(analyzer.getModule('a').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'a', 'b' ],
       declarations: [ 'a', 'b', 'c' ]
@@ -223,6 +229,7 @@ describe('Analyzer', () => {
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), EMPTY);
     assert.deepEqual(analyzer.getModule('a').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'a' ],
       declarations: [ 'a', 'b' ]
@@ -249,6 +256,7 @@ describe('Analyzer', () => {
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), EMPTY);
     assert.deepEqual(analyzer.getModule('a').getInfo(), {
+      removeImport: false,
       bailouts: [
         {
           loc: {
@@ -264,6 +272,7 @@ describe('Analyzer', () => {
       declarations: [ 'a', 'b' ]
     });
     assert.deepEqual(analyzer.getModule('b').getInfo(), {
+      removeImport: false,
       bailouts: [
         {
           loc: {
@@ -432,6 +441,7 @@ describe('Analyzer', () => {
     `), 'root');
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [],
       declarations: [ 'a', 'b' ]
@@ -483,6 +493,7 @@ describe('Analyzer', () => {
     `), 'rev-root');
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), {
+      removeImport: false,
       bailouts: [ {
         loc: {
           start: { column: 6, line: 3 },
@@ -498,6 +509,7 @@ describe('Analyzer', () => {
     });
 
     assert.deepEqual(analyzer.getModule('rev-root').getInfo(), {
+      removeImport: false,
       bailouts: [ {
         loc: {
           start: { column: 6, line: 6 },
@@ -742,9 +754,27 @@ describe('Analyzer', () => {
     analyzer.resolve('root', './ab', 'ab');
 
     assert.deepEqual(analyzer.getModule('ab').getInfo(), {
+      removeImport: false,
       bailouts: false,
       declarations: [ 'a' ],
       uses: [ 'a' ]
+    });
+    assert(analyzer.isSuccess());
+  });
+
+  it('should remove import for unused side-effect-free module', () => {
+    analyzer.run(parse(`
+      const _ = require('./lodash');
+    `), 'root');
+
+    analyzer.run(parse('exports.a = 1;'), 'lodash', { sideEffects: false });
+    analyzer.resolve('root', './lodash', 'lodash');
+
+    assert.deepEqual(analyzer.getModule('lodash').getInfo(), {
+      removeImport: true,
+      bailouts: false,
+      declarations: [ 'a' ],
+      uses: []
     });
     assert(analyzer.isSuccess());
   });
@@ -793,24 +823,28 @@ describe('Analyzer', () => {
     analyzer.resolve('ma', './mb', 'mb');
 
     assert.deepEqual(analyzer.getModule('a').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'a' ],
       declarations: [ 'a', 'c', 'b' ]
     });
 
     assert.deepEqual(analyzer.getModule('b').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'a' ],
       declarations: []
     });
 
     assert.deepEqual(analyzer.getModule('ma').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'a' ],
       declarations: [ 'a', 'b' ]
     });
 
     assert.deepEqual(analyzer.getModule('mb').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'a' ],
       declarations: []
@@ -843,6 +877,7 @@ describe('Analyzer', () => {
     `), 'root');
 
     assert.deepEqual(analyzer.getModule('root').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [],
       declarations: [ 'b', 'c', 'd' ]
@@ -867,6 +902,7 @@ describe('Analyzer', () => {
     analyzer.resolve('app', 'util', 'util');
 
     assert.deepEqual(analyzer.getModule('util').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'inherits' ],
       declarations: [ 'inherits', 'debuglog', 'format' ]
@@ -891,11 +927,13 @@ describe('Analyzer', () => {
     analyzer.resolve('two', './one', 'one');
 
     assert.deepEqual(analyzer.getModule('one').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [],
       declarations: [ 'do' ]
     });
     assert.deepEqual(analyzer.getModule('two').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [],
       declarations: [ 'dont' ]
@@ -925,11 +963,13 @@ describe('Analyzer', () => {
     analyzer.resolve('three', './two', 'two');
 
     assert.deepEqual(analyzer.getModule('one').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'do' ],
       declarations: [ 'do' ]
     });
     assert.deepEqual(analyzer.getModule('two').getInfo(), {
+      removeImport: false,
       bailouts: false,
       uses: [ 'dont' ],
       declarations: [ 'dont' ]
