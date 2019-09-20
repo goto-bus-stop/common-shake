@@ -9,7 +9,8 @@
   },
   "scripts": {
     "lint": "eslint lib/*.js lib/**/*.js test/*.js",
-    "test": "nyc --reporter=html mocha --reporter=spec test/*-test.js && npm run lint"
+    "nyc": "nyc --reporter=html mocha --reporter=spec test/*-test.js",
+    "test": "npm run nyc && npm run lint"
   },
   "files": [
     "lib"
@@ -29,7 +30,7 @@
   "devDependencies": {
     "acorn": "^7.0.0",
     "assert-text": "^1.1.2",
-    "eslint": "^4.19.1",
+    "eslint": "^6.4.0",
     "mocha": "^5.2.0",
     "nyc": "^11.9.0"
   }
