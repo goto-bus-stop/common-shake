@@ -10,7 +10,7 @@ script:
   - npm run nyc
 
 jobs:
-  matrix:
+  include:
     - name: Run lint
       node_js: "stable"
       script: npm run lint
