@@ -6,9 +6,17 @@ node_js:
   - "10"
   - "9"
   - "8"
-  - "7"
-  - "6"
-  - "4"
 script:
   - npm run nyc
-  - 'if [ $TRAVIS_NODE_VERSION == stable ]; then npm run lint; fi'
+
+jobs:
+  matrix:
+    - name: Run lint
+      node_js: "stable"
+      script: npm run lint
+    - node_js: "7"
+      script: npm run test
+    - node_js: "6"
+      script: npm run test
+    - node_js: "4"
+      script: npm run test
