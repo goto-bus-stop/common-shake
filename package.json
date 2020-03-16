@@ -9,8 +9,9 @@
   },
   "scripts": {
     "lint": "eslint lib/*.js lib/**/*.js test/*.js",
-    "nyc": "nyc --reporter=html mocha --reporter=spec test/*-test.js",
-    "test": "npm run nyc && npm run lint"
+    "test:no-cov": "mocha --reporter=spec test/*-test.js",
+    "test:cov": "nyc --reporter=html mocha --reporter=spec test/*-test.js",
+    "test": "npm run test:cov && npm run lint"
   },
   "files": [
     "lib"

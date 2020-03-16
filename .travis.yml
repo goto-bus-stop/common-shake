@@ -7,7 +7,7 @@ node_js:
   - "9"
   - "8"
 script:
-  - npm run nyc
+  - npm run test:cov
 
 jobs:
   include:
@@ -15,8 +15,8 @@ jobs:
       node_js: "stable"
       script: npm run lint
     - node_js: "7"
-      script: npm run test
+      script: npm run test:no-cov
     - node_js: "6"
-      script: npm run test
+      script: npm run test:no-cov
     - node_js: "4"
-      script: npm run test
+      script: npm run test:no-cov
