@@ -975,4 +975,86 @@ describe('Analyzer', () => {
       declarations: [ 'dont' ]
     });
   });
+
+  it('should work with @babel/core 7.22.11', () => {
+    analyzer.run(parse(`
+      const { fn1 } = require('./a');
+      fn1();
+    `), 'root');
+
+    analyzer.run(parse(`
+      const { fn3 } = require("./b");
+      const fn2 = function fn2() {
+        fn3();
+      };
+      exports.fn2 = fn2;
+      const fn1 = function fn1() {
+        fn2();
+      };
+      exports.fn1 = fn1;
+    `), 'a');
+
+    analyzer.run(parse(`
+      exports.fn3 = void 0;
+      const fn3 = function fn3() {};
+      exports.fn3 = fn3;
+    `), 'b');
+
+    analyzer.resolve('root', './a', 'a');
+    analyzer.resolve('a', './b', 'b');
+
+    assert.deepEqual(analyzer.getModule('root').getInfo(), EMPTY);
+    assert.deepEqual(analyzer.getModule('a').getInfo(), {
+      removeImport: false,
+      bailouts: false,
+      uses: [ 'fn1' ],
+      declarations: [ 'fn2', 'fn1' ]
+    });
+    assert.deepEqual(analyzer.getModule('b').getInfo(), {
+      removeImport: false,
+      bailouts: false,
+      uses: ['fn3' ] ,
+      declarations: ['fn3', 'fn3']
+    });
+  });
+
+  it('should work with @babel/core 7.22.15+', () => {
+    analyzer.run(parse(`
+      const { fn1 } = require('./a');
+      fn1();
+    `), 'root');
+
+    analyzer.run(parse(`
+      exports.fn2 = exports.fn1 = void 0;
+      const b = require('./b');
+      const fn2 = exports.fn2 = function fn2() {
+        b.fn3();
+      };
+      const fn1 = exports.fn1 = function fn1() {
+        fn2();
+      };
+    `), 'a');
+
+    analyzer.run(parse(`
+      exports.fn3 = void 0;
+      const fn3 = exports.fn3 = function fn3() {};
+    `), 'b');
+
+    analyzer.resolve('root', './a', 'a');
+    analyzer.resolve('a', './b', 'b');
+
+    assert.deepEqual(analyzer.getModule('root').getInfo(), EMPTY);
+    assert.deepEqual(analyzer.getModule('a').getInfo(), {
+      removeImport: false,
+      bailouts: false,
+      uses: [ 'fn1' ],
+      declarations: [ 'fn2', 'fn1', 'fn2', 'fn1' ]
+    });
+    assert.deepEqual(analyzer.getModule('b').getInfo(), {
+      removeImport: false,
+      bailouts: false,
+      uses: [ 'fn3' ] ,
+      declarations: [ 'fn3', 'fn3' ]
+    });
+  });
 });
