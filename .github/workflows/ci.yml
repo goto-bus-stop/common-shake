@@ -7,18 +7,22 @@ jobs:
     name: Run tests
     strategy:
       matrix:
-        node-version:
-          - '4.x'
-          - '6.x'
-          - '8.x'
-          - '10.x'
-          - '12.x'
-          - '14.x'
-          - '16.x'
-          - '18.x'
-          - '20.x'
-          - '22.x'
-          - '24.x'
+        include:
+          - node_version: '4.x'
+          - node_version: '6.x'
+          - node_version: '8.x'
+          - node_version: '10.x'
+          - node_version: '12.x'
+          - node_version: '14.x'
+          - node_version: '16.x'
+          - node_version: '18.x'
+            coverage: true
+          - node_version: '20.x'
+            coverage: true
+          - node_version: '22.x'
+            coverage: true
+          - node_version: '24.x'
+            coverage: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -30,10 +34,10 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run tests (no coverage)
-        if: ${{ matrix.node-version == '4.x' || matrix.node-version == '6.x' || matrix.node-version == '8.x' }}
+        if: ${{ matrix.coverage }}
         run: npm run test:no-cov
       - name: Run tests
-        if: ${{ matrix.node-version != '4.x' && matrix.node-version != '6.x' && matrix.node-version != '8.x' }}
+        if: ${{ !matrix.coverage }}
         run: npm run test:cov
 
   lint:
