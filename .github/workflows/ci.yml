@@ -30,10 +30,10 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run tests (no coverage)
-        if: ${{ matrix.node-version == '4.x' || matrix.node-version == '6.x' || matrix.node-version == '8.x' }}
+        if: ${{ matrix.node-version < '10.x' }}
         run: npm run test:no-cov
       - name: Run tests
-        if: ${{ matrix.node-version != '4.x' && matrix.node-version != '6.x' && matrix.node-version != '8.x' }}
+        if: ${{ matrix.node-version >= '10.x' }}
         run: npm run test:cov
 
   lint:
