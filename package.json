@@ -24,12 +24,11 @@
   "author": "Fedor Indutny <fedor@indutny.com> (http://darksi.de/)",
   "license": "MIT",
   "dependencies": {
-    "acorn-walk": "^7.0.0",
+    "acorn-node": "^2.0.1",
     "debug": "^3.2.6",
     "escope": "^3.6.0"
   },
   "devDependencies": {
-    "acorn": "^7.0.0",
     "assert-text": "^1.1.2",
     "eslint": "^6.4.0",
     "mocha": "^5.2.0",
