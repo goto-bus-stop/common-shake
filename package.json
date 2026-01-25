@@ -26,7 +26,7 @@
   "dependencies": {
     "acorn-node": "^2.0.1",
     "debug": "^3.2.6",
-    "escope": "^3.6.0"
+    "escope": "^4.0.0"
   },
   "devDependencies": {
     "assert-text": "^1.1.2",
