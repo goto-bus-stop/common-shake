@@ -1,14 +1,21 @@
-module.exports = {
-  'env': {
-    'browser': false,
-    'commonjs': true,
-    'node': true,
-    'es6': true
+import js from '@eslint/js';
+
+export default [js.configs.recommended, {
+  // 'env': {
+  //   'browser': false,
+  //   'commonjs': true,
+  //   'node': true,
+  //   'es6': true
+  // },
+  'languageOptions': {
+    'globals': {
+      'require': 'readonly',
+      'module': 'readonly',
+      'exports': 'readonly',
+      '__dirname': 'readonly',
+      '__filename': 'readonly',
+    },
   },
-  'parserOptions': {
-    'ecmaVersion': 8
-  },
-  'extends': 'eslint:recommended',
   'rules': {
     'indent': [
       'error',
@@ -43,4 +50,4 @@ module.exports = {
       2
     ]
   }
-};
+}];
